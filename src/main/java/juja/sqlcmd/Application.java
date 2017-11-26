@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class Application {
 
-    private static final String JDBC_SQL_DRIVER = "org.postgresql.Driver";
+    private static final String JDBC_POSTGRESSQL_DRIVER = "org.postgresql.Driver";
     private static final String JDBC_PROTOCOLS = "jdbc:postgresql://";
     private static final String SQl_URL = "127.0.0.1:5432/";
 
@@ -22,6 +22,13 @@ public class Application {
 
     private Connection connection = null;
 
+    static {
+        try {
+            Class.forName(JDBC_POSTGRESSQL_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     Application() {
         connection = getConnection();
@@ -33,9 +40,7 @@ public class Application {
     }
 
     public void simpleSQL() {
-
         printTableList();
-
         String tableName = "user";
 
         dropTableifExists(tableName);
@@ -43,13 +48,11 @@ public class Application {
 
         createTableUser(tableName);
         printTable(tableName);
-
         printTableList();
 
         insertIntoUser(tableName, "user1", "password1");
         insertIntoUser(tableName, "user2", "password2");
         insertIntoUser(tableName, "user3", "password3");
-
         printTable(tableName);
 
         changePasswordInTable(tableName, "user1", "password2");
@@ -57,7 +60,6 @@ public class Application {
 
         removeUserFromTable(tableName, "user3");
         printTable(tableName);
-
 
         if (connection != null) {
             try {
@@ -80,8 +82,7 @@ public class Application {
     }
 
     private void changePasswordInTable(String tableName, String name, String password) {
-
-        String sqlQuery = "UPDATE " + tableNameFormatted(tableName) + " SET password = '" + password + "' WHERE name = '" + name + "'";
+        String sqlQuery = String.format("UPDATE " + tableNameFormatted(tableName) + " SET password = '%s'" + " WHERE name='%s'", password, name);
         printStatusMsg("Updating", tableName);
         int affectedRows = executeQuery(sqlQuery);
         printMsgAffectedRows(affectedRows);
@@ -96,7 +97,6 @@ public class Application {
     private String tableNameFormatted(String tableName) {
         return "\"" + tableName + "\"";
     }
-
 
     private void printTable(String tableName) {
         String sqlQuery = "SELECT * FROM " + tableNameFormatted(tableName);
@@ -122,9 +122,7 @@ public class Application {
                 truncate(stringBuilder, columnsSeparator.length());
                 stringBuilder.append(LINE_SEPARATOR);
             }
-
             System.out.println(stringBuilder);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -135,7 +133,6 @@ public class Application {
     }
 
     private void insertIntoUser(String tableName, String name, String password) {
-
         String sqlQuery = String.format("INSERT INTO " + tableNameFormatted(tableName) + "(name, password) VALUES('%s','%s') ", name, password);
         printStatusMsg("Inserting into", tableName);
         int affectedRows = executeQuery(sqlQuery);
@@ -184,7 +181,6 @@ public class Application {
         printMsgAffectedRows(affectedRows);
     }
 
-
     private void printTableList() {
         try {
             printStatusMsg("Printing", "list");
@@ -204,7 +200,6 @@ public class Application {
             e.printStackTrace();
         }
     }
-
 
     private Connection getConnection() {
         if (connection == null) {
