@@ -71,15 +71,15 @@ public class ApplicationTest {
                 "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
                 "Printing table user.." + LINE_SEPARATOR +
+                "1 |user1 |password2" + LINE_SEPARATOR +
                 "2 |user2 |password2" + LINE_SEPARATOR +
                 "3 |user3 |password3" + LINE_SEPARATOR +
-                "1 |user1 |password2" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
                 "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
                 "Printing table user.." + LINE_SEPARATOR +
-                "2 |user2 |password2" + LINE_SEPARATOR +
                 "1 |user1 |password2" + LINE_SEPARATOR +
+                "2 |user2 |password2" + LINE_SEPARATOR +
                 LINE_SEPARATOR;
         assertEquals(expected, outContent.toString());
     }

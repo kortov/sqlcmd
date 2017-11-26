@@ -99,7 +99,7 @@ public class Application {
     }
 
     private void printTable(String tableName) {
-        String sqlQuery = "SELECT * FROM " + tableNameFormatted(tableName);
+        String sqlQuery = String.format("SELECT * FROM %1$s order by %1$s.id", tableNameFormatted(tableName));
         try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             printStatusMsg("Printing", tableName);
             statement.execute();
