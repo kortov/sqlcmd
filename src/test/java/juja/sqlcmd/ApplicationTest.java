@@ -40,49 +40,22 @@ public class ApplicationTest {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        String expected = "Printing table list.." + LINE_SEPARATOR +
-                "user" + LINE_SEPARATOR +
+        String expected = "user" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Removing table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 0 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Printing table list.." + LINE_SEPARATOR +
                 "db is empty" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Creating table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 0 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Printing table \"user\".." + LINE_SEPARATOR +
                 "table is empty" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Printing table list.." + LINE_SEPARATOR +
                 "user" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Inserting into table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Inserting into table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Inserting into table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Printing table \"user\".." + LINE_SEPARATOR +
                 "1 |user1 |password1" + LINE_SEPARATOR +
                 "2 |user2 |password2" + LINE_SEPARATOR +
                 "3 |user3 |password3" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Updating table \"user\".." + LINE_SEPARATOR +
-                "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Printing table \"user\".." + LINE_SEPARATOR +
                 "1 |user1 |password2" + LINE_SEPARATOR +
                 "2 |user2 |password2" + LINE_SEPARATOR +
                 "3 |user3 |password3" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "The query ended successfully, 1 row(s) affected" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "Printing table \"user\".." + LINE_SEPARATOR +
                 "1 |user1 |password2" + LINE_SEPARATOR +
                 "2 |user2 |password2" + LINE_SEPARATOR +
                 LINE_SEPARATOR;

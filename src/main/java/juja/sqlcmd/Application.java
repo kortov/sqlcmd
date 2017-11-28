@@ -2,10 +2,9 @@ package juja.sqlcmd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Application {
 
@@ -19,19 +18,15 @@ public class Application {
     private static final String USER_TABLE_NAME = "\"user\"";
     private Connection connection = null;
 
-    Application() throws SQLException, ClassNotFoundException {
-        connection = getConnection();
-    }
-
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         new Application().simpleSQL();
-
     }
 
-    public void simpleSQL() {
-        printTableList();
+    public void simpleSQL() throws SQLException, ClassNotFoundException {
+        connection = getConnection();
 
-        dropTableIfExists();
+        printTableList();
+        dropTableIfExists(USER_TABLE_NAME);
         printTableList();
 
         createTableUser();
@@ -50,52 +45,39 @@ public class Application {
         printTable(USER_TABLE_NAME);
 
         if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            connection.close();
         }
     }
 
-    private void printStatus(String operation, String subject) {
-        System.out.println(operation + " table " + subject + "..");
+    private void dropTableIfExists(String tableName) throws SQLException {
+        String sqlQuery = "DROP TABLE IF EXISTS " + tableName;
+        executeUpdateQuery(sqlQuery);
     }
 
-    private void dropTableIfExists() {
-        String sqlQuery = "DROP TABLE IF EXISTS " + USER_TABLE_NAME;
-        printStatus("Removing", USER_TABLE_NAME);
-        int affectedRows = executeUpdateQuery(sqlQuery);
-        printAffectedRows(affectedRows);
-    }
-
-    private void changePasswordInUserTable(String name, String password) {
+    private void changePasswordInUserTable(String name, String password) throws SQLException {
         String sqlQuery = String.format("UPDATE " + USER_TABLE_NAME + " SET password = '%s'" + " WHERE name='%s'", password, name);
-        printStatus("Updating", USER_TABLE_NAME);
-        int affectedRows = executeUpdateQuery(sqlQuery);
-        printAffectedRows(affectedRows);
+        executeUpdateQuery(sqlQuery);
     }
 
-    private void removeFromUserTable(String name) {
+    private void removeFromUserTable(String name) throws SQLException {
         String sqlQuery = String.format("DELETE FROM " + USER_TABLE_NAME + " WHERE name='%s'", name);
-        int affectedRows = executeUpdateQuery(sqlQuery);
-        printAffectedRows(affectedRows);
+        executeUpdateQuery(sqlQuery);
     }
 
     private void printTable(String tableName) {
         String sqlQuery = String.format("SELECT * FROM %s order by %<s.id", USER_TABLE_NAME);
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            printStatus("Printing", tableName);
-            statement.execute();
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sqlQuery);
             ResultSet resultSet = statement.getResultSet();
 
-            if (!resultSet.isBeforeFirst()) {
+            final boolean isTableContainsData = resultSet.isBeforeFirst();
+            if (!isTableContainsData) {
                 System.out.println("table is empty" + LINE_SEPARATOR);
                 return;
             }
 
             StringBuilder stringBuilder = new StringBuilder();
-            int columnsCount = getColumnsCountFrom(resultSet);
+            int columnsCount = resultSet.getMetaData().getColumnCount();
             while (resultSet.next()) {
                 String columnsSeparator = " |";
                 for (int i = 1; i <= columnsCount; i++) {
@@ -112,66 +94,38 @@ public class Application {
         }
     }
 
-    private void insertIntoUserTable(String name, String password) {
+    private void insertIntoUserTable(String name, String password) throws SQLException {
         String sqlQuery = String.format("INSERT INTO " + USER_TABLE_NAME + "(name, password) VALUES('%s','%s') ", name, password);
-        printStatus("Inserting into", USER_TABLE_NAME);
-        int affectedRows = executeUpdateQuery(sqlQuery);
-        printAffectedRows(affectedRows);
+        executeUpdateQuery(sqlQuery);
     }
 
-    private void printAffectedRows(int affectedRows) {
-        if (affectedRows < 0) {
-            System.out.println("The query ended unsuccessfully, 0 rows affected" + LINE_SEPARATOR);
-        } else {
-            System.out.println("The query ended successfully, " + affectedRows + " row(s) affected" + LINE_SEPARATOR);
+    private int executeUpdateQuery(String sqlQuery) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            return statement.executeUpdate(sqlQuery);
         }
     }
 
-    private int executeUpdateQuery(String sqlQuery) {
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            return statement.executeUpdate();
-        } catch (SQLException e) {
-            // gotcha
-        }
-        return -1;
-    }
-
-
-    private int getColumnsCountFrom(ResultSet resultSet) {
-        try {
-            ResultSetMetaData rsmd = resultSet.getMetaData();
-            return rsmd.getColumnCount();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    private void createTableUser() {
+    private void createTableUser() throws SQLException {
         String sqlQuery = "CREATE TABLE IF NOT EXISTS " + USER_TABLE_NAME +
                 "(" +
                 "id SERIAL PRIMARY KEY," +
                 "name text," +
                 "password text" +
                 ")";
-        printStatus("Creating", USER_TABLE_NAME);
-        int affectedRows = executeUpdateQuery(sqlQuery);
-        printAffectedRows(affectedRows);
+        executeUpdateQuery(sqlQuery);
     }
 
     private void printTableList() {
         try (ResultSet rs = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"})) {
-            printStatus("Printing", "list");
-
-            if (!rs.isBeforeFirst()) {
-                System.out.println("db is empty");
+            final boolean isDbContainsTables = rs.isBeforeFirst();
+            if (isDbContainsTables) {
+                while (rs.next()) {
+                    System.out.println(rs.getString(3));
+                }
+                System.out.println();
+            } else {
+                System.out.println("db is empty" + LINE_SEPARATOR);
             }
-
-            while (rs.next()) {
-                System.out.println(rs.getString(3));
-            }
-
-            System.out.println();
         } catch (SQLException e) {
             e.printStackTrace();
         }
