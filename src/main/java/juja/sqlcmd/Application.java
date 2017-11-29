@@ -64,11 +64,10 @@ public class Application {
         executeUpdateQuery(sqlQuery);
     }
 
-    private void printTable(String tableName) {
+    private void printTable(String tableName) throws SQLException {
         String sqlQuery = String.format("SELECT * FROM %s order by %<s.id", USER_TABLE_NAME);
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(sqlQuery);
-            ResultSet resultSet = statement.getResultSet();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 
             final boolean isTableContainsData = resultSet.isBeforeFirst();
             if (!isTableContainsData) {
@@ -88,9 +87,6 @@ public class Application {
                 stringBuilder.append(LINE_SEPARATOR);
             }
             System.out.println(stringBuilder);
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -115,7 +111,7 @@ public class Application {
         executeUpdateQuery(sqlQuery);
     }
 
-    private void printTableList() {
+    private void printTableList() throws SQLException {
         try (ResultSet rs = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"})) {
             final boolean isDbContainsTables = rs.isBeforeFirst();
             if (isDbContainsTables) {
@@ -126,8 +122,6 @@ public class Application {
             } else {
                 System.out.println("db is empty" + LINE_SEPARATOR);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
