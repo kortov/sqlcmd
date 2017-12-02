@@ -11,9 +11,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class DatabaseManagerTest {
-    private DatabaseManager databaseManager;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private DatabaseManager databaseManager;
     private PrintStream originalOut;
     private PrintStream originalErr;
 
