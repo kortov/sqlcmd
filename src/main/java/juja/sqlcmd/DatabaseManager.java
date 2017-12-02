@@ -19,7 +19,7 @@ public class DatabaseManager {
         this.jdbcUrl = jdbcUrl;
     }
 
-    boolean connect(String database, String user, String password) {
+    public boolean connect(String database, String user, String password) {
         try {
             Class.forName(jdbcDriverClass);
             if (connection != null) {
