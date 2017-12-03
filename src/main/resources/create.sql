@@ -1,35 +1,30 @@
 CREATE TABLE customers (
-  id SERIAL NOT NULL, 
+  id SERIAL PRIMARY KEY,
   name varchar(255) NOT NULL, 
   surname varchar(255) NOT NULL, 
-  age SMALLINT NOT NULL, 
-  PRIMARY KEY (id)
+  age SMALLINT NOT NULL
 );
 CREATE TABLE "orders" (
-  id SERIAL NOT NULL, 
+  id SERIAL PRIMARY KEY,
   orders_date timestamp NOT NULL, 
   customers_id INT NOT NULL,
-  shops_id    INT NOT NULL, 
-  PRIMARY KEY (id)
+  shops_id    INT NOT NULL
 );
 CREATE TABLE orders_products (
-  orders_id INT NOT NULL, 
-  products_id INT NOT NULL, 
+  orders_id INT PRIMARY KEY,
+  products_id INT PRIMARY KEY,
   selling_price numeric(19, 2) NOT NULL, 
-  count INT NOT NULL, 
-  PRIMARY KEY (orders_id, products_id)
+  count INT NOT NULL
 );
 CREATE TABLE products (
-  id SERIAL NOT NULL, 
+  id SERIAL PRIMARY KEY,
   name varchar(255) NOT NULL, 
-  purchase_price numeric(19, 2) NOT NULL, 
-  PRIMARY KEY (id)
+  purchase_price numeric(19, 2) NOT NULL
 );
 CREATE TABLE shops (
-  id SERIAL NOT NULL, 
+  id SERIAL PRIMARY KEY,
   name varchar(255) NOT NULL, 
-  address varchar(255) NOT NULL,   
-  PRIMARY KEY (id)
+  address varchar(255) NOT NULL
 );
 ALTER TABLE orders ADD CONSTRAINT FK_orders_customers FOREIGN KEY (customers_id) REFERENCES customers (id);
 ALTER TABLE orders ADD CONSTRAINT FK_orders_shops FOREIGN KEY (shops_id) REFERENCES shops (id);
