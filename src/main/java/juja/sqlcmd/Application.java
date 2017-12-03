@@ -25,24 +25,15 @@ public class Application {
     public void simpleSQL() throws SQLException, ClassNotFoundException {
         connection = getConnection();
 
-        printTableList();
-        dropTableIfExists(USER_TABLE_NAME);
-        printTableList();
-
-        createTableUser();
-        printTable(USER_TABLE_NAME);
-        printTableList();
-
-        insertIntoUserTable("user1", "password1");
-        insertIntoUserTable("user2", "password2");
-        insertIntoUserTable("user3", "password3");
-        printTable(USER_TABLE_NAME);
-
-        changePasswordInUserTable("user1", "password2");
-        printTable(USER_TABLE_NAME);
-
-        removeFromUserTable("user3");
-        printTable(USER_TABLE_NAME);
+        executeUpdateQuery("ALTER TABLE orders DROP CONSTRAINT FK_orders_customers;\n" +
+                "ALTER TABLE orders DROP CONSTRAINT FK_orders_shops;\n" +
+                "ALTER TABLE orders_products DROP CONSTRAINT FK_products_id_orders_products;\n" +
+                "ALTER TABLE orders_products DROP CONSTRAINT FK_orders_id_orders_products;\n" +
+                "DROP TABLE IF EXISTS customers CASCADE;\n" +
+                "DROP TABLE IF EXISTS orders CASCADE;\n" +
+                "DROP TABLE IF EXISTS orders_products CASCADE;\n" +
+                "DROP TABLE IF EXISTS products CASCADE;\n" +
+                "DROP TABLE IF EXISTS shops CASCADE;\n");
 
         if (connection != null) {
             connection.close();
