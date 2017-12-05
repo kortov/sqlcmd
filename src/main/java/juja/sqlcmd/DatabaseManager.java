@@ -14,7 +14,7 @@ public class DatabaseManager {
         jdbcUrl = "jdbc:postgresql://localhost:5432/";
     }
 
-    public DatabaseManager(String jdbcDriverClass, String jdbcUrl) {
+    DatabaseManager(String jdbcDriverClass, String jdbcUrl) {
         this.jdbcDriverClass = jdbcDriverClass;
         this.jdbcUrl = jdbcUrl;
     }
@@ -22,16 +22,11 @@ public class DatabaseManager {
     public boolean connect(String database, String user, String password) {
         try {
             Class.forName(jdbcDriverClass);
-            if (connection != null) {
-                connection.close();
-            }
-
             connection = DriverManager.getConnection(
                     jdbcUrl + database, user, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            connection = null;
             return false;
         }
     }
