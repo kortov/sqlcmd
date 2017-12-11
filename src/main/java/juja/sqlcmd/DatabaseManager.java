@@ -4,23 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class DatabaseManager {
     private final String jdbcDriverClass;
     private final String jdbcUrl;
-    private String schemaPattern = "public";
     private Connection connection;
-
-    public String getSchemaPattern() {
-        return schemaPattern;
-    }
-
-    public void setSchemaPattern(String schemaPattern) {
-        this.schemaPattern = schemaPattern;
-    }
 
     public DatabaseManager() {
         jdbcDriverClass = "org.postgresql.Driver";
@@ -44,14 +34,9 @@ public class DatabaseManager {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
-        DatabaseManager manager = new DatabaseManager();
-        manager.connect("sqlcmd", "sqlcmd", "sqlcmd");
-        System.out.println(Arrays.toString(manager.getTableNames()));
-    }
-
     public String[] getTableNames() throws SQLException {
-        try (ResultSet rs = connection.getMetaData().getTables(null, schemaPattern, "%", new String[]{"TABLE"})) {
+        try (ResultSet rs = connection.getMetaData().getTables(
+                null, "public", "%", new String[]{"TABLE"})) {
             List<String> tablesList = new LinkedList<>();
             while (rs.next()) {
                 tablesList.add(rs.getString("table_name"));
