@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class DatabaseManager {
     private final String jdbcDriverClass;
@@ -37,11 +35,17 @@ public class DatabaseManager {
     public String[] getTableNames() throws SQLException {
         try (ResultSet rs = connection.getMetaData().getTables(
                 null, "public", "%", new String[]{"TABLE"})) {
-            List<String> tablesList = new LinkedList<>();
-            while (rs.next()) {
-                tablesList.add(rs.getString("table_name"));
+            int tablesCount = 0;
+            if (rs.last()) {
+                tablesCount = rs.getRow();
+                rs.beforeFirst();
             }
-            return tablesList.toArray(new String[0]);
+            String[] tableNames = new String[tablesCount];
+            int index = 0;
+            while (rs.next()) {
+                tableNames[index++] = rs.getString("table_name");
+            }
+            return tableNames;
         }
     }
 

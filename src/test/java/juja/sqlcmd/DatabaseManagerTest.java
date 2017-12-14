@@ -22,12 +22,13 @@ public class DatabaseManagerTest {
     private static final String DB_USER_NAME = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/";
-    private static DatabaseManager databaseManager;
     private static Connection connection;
+    
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private PrintStream originalOut;
     private PrintStream originalErr;
+    private DatabaseManager databaseManager;
 
     @BeforeClass
     public static void setTestingEnvironment() throws SQLException {
