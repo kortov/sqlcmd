@@ -49,4 +49,9 @@ public class DatabaseManager {
         }
     }
 
+    public DataSet[] getTableData(String tableName) {
+
+        return null;
+    }
+
 }
