@@ -1,9 +1,6 @@
 package juja.sqlcmd;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseManager {
     private final String jdbcDriverClass;
@@ -32,6 +29,12 @@ public class DatabaseManager {
         }
     }
 
+    public void close() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
+
     public String[] getTableNames() throws SQLException {
         try (ResultSet rs = connection.getMetaData().getTables(
                 null, "public", "%", new String[]{"TABLE"})) {
@@ -49,9 +52,56 @@ public class DatabaseManager {
         }
     }
 
-    public DataSet[] getTableData(String tableName) {
+    public DataSet[] getTableData(String tableName) throws SQLException {
+        int tableSize = TableSize(tableName);
+        if (tableSize == 0 || !isTableExists(tableName)) {
+            return new DataSet[0];
+        }
+        DataSet[] dataSets = new DataSet[tableSize];
+        int numberOfColumns = NumberOfColumns(tableName);
+        fillDataSets(tableName, dataSets, numberOfColumns);
+        return dataSets;
+    }
 
-        return null;
+    private boolean isTableExists(String tableName) throws SQLException {
+        for (String name : getTableNames()) {
+            if (name.equals(tableName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void fillDataSets(String tableName, DataSet[] result, int numberOfColumns) throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM public." + tableName)) {
+            int index = 0;
+            while (rs.next()) {
+                DataSet dataSet = new DataSet(numberOfColumns);
+                result[index++] = dataSet;
+                for (int i = 0; i < numberOfColumns; i++) {
+                    dataSet.setValue(i, rs.getString(i + 1));
+                }
+            }
+        }
+    }
+
+    private int NumberOfColumns(String tableName) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName + " LIMIT 1")) {
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            return rsmd.getColumnCount();
+        }
+    }
+
+    private int TableSize(String tableName) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(
+                     "SELECT COUNT(*) as RECORDS FROM " + tableName)) {
+            if (resultSet.next())
+                return resultSet.getInt("RECORDS");
+            else return 0;
+        }
     }
 
 }

@@ -11,26 +11,20 @@ public class DataSet {
         row = new String[rowSize];
     }
 
-    public void setValue(int index, String string) {
-        row[index] = string;
-        // TODO add check arguments
-    }
-
-    public String getValue(int index, Object string) {
-        return row[index];
-        // TODO add check args
+    public void setValue(int columnIndex, String string) {
+        if (columnIndex >= rowSize || columnIndex < 0) {
+            String message = String.format("Column index should be between 0 and %s-1", rowSize);
+            throw new IllegalArgumentException(message);
+        }
+        row[columnIndex] = string;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DataSet dataSet = (DataSet) o;
-
-        if (rowSize != dataSet.rowSize) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(row, dataSet.row);
+        return rowSize == dataSet.rowSize && Arrays.equals(row, dataSet.row);
     }
 
     @Override

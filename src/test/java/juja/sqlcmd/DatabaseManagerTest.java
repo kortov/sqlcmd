@@ -1,10 +1,6 @@
 package juja.sqlcmd;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,9 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DatabaseManagerTest {
     private static final String TEST_DB_NAME = "test";
@@ -41,11 +35,6 @@ public class DatabaseManagerTest {
                 JDBC_URL + TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
     }
 
-    @AfterClass
-    public static void closeConnection() throws SQLException {
-        connection.close();
-    }
-
     @Before
     public void setUpStreamsAndDbManager() throws SQLException {
         recreateDbSchema();
@@ -58,9 +47,15 @@ public class DatabaseManagerTest {
     }
 
     @After
-    public void cleanUpStreams() {
+    public void cleanUpStreams() throws SQLException {
+        databaseManager.close();
         System.setOut(originalOut);
         System.setErr(originalErr);
+    }
+
+    @AfterClass
+    public static void closeConnection() throws SQLException {
+        connection.close();
     }
 
     @Test
