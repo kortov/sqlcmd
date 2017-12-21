@@ -1,6 +1,10 @@
 package juja.sqlcmd;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -9,7 +13,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DatabaseManagerTest {
     private static final String TEST_DB_NAME = "test";
@@ -17,7 +25,7 @@ public class DatabaseManagerTest {
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/";
     private static Connection connection;
-    
+
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private PrintStream originalOut;
@@ -104,6 +112,38 @@ public class DatabaseManagerTest {
         String[] expectedArray = new String[]{};
         String[] actualArray = databaseManager.getTableNames();
         assertArrayEquals(expectedArray, actualArray);
+    }
+
+    @Test
+    public void getTableDataWhenEmptyTableReturnsEmptyArray() throws SQLException {
+        executeSqlQuery("CREATE TABLE test_table()");
+        DataSet[] expected = new DataSet[0];
+        assertArrayEquals(expected, databaseManager.getTableData("test_table"));
+    }
+
+    @Test
+    public void getTableDataWhenWrongTableNameReturnsEmptyArray() throws SQLException {
+        DataSet[] expected = new DataSet[0];
+        assertArrayEquals(expected, databaseManager.getTableData("WrongTableName"));
+    }
+
+    @Test
+    public void getTableDataWhenValidDataReturnsTableDataArray() throws SQLException {
+        executeSqlQuery("CREATE TABLE test_table(" +
+                "id INTEGER," +
+                "name VARCHAR(128)" +
+                ")");
+        executeSqlQuery("INSERT INTO test_table VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO test_table VALUES(2,'name2')");
+        DataSet row1 = new DataSet(2);
+        row1.setValue(0, "1");
+        row1.setValue(1, "name1");
+        DataSet row2 = new DataSet(2);
+        row2.setValue(0, "2");
+        row2.setValue(1, "name2");
+        DataSet[] expected = new DataSet[]{row1, row2};
+        DataSet[] actual = databaseManager.getTableData("test_table");
+        assertThat(actual, arrayContainingInAnyOrder(expected));
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {

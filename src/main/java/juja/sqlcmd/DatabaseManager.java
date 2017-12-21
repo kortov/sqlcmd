@@ -1,6 +1,11 @@
 package juja.sqlcmd;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseManager {
     private final String jdbcDriverClass;
@@ -53,8 +58,11 @@ public class DatabaseManager {
     }
 
     public DataSet[] getTableData(String tableName) throws SQLException {
+        if (!isTableExists(tableName)) {
+            return new DataSet[0];
+        }
         int tableSize = TableSize(tableName);
-        if (tableSize == 0 || !isTableExists(tableName)) {
+        if (tableSize == 0) {
             return new DataSet[0];
         }
         DataSet[] dataSets = new DataSet[tableSize];
