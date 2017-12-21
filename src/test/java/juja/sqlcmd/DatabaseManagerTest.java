@@ -99,7 +99,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableNamesWith2tables() throws SQLException {
+    public void getTableNamesWithTwoTables() throws SQLException {
         executeSqlQuery("CREATE TABLE table1()");
         executeSqlQuery("CREATE TABLE table2()");
         String[] expectedArray = {"table1", "table2"};
@@ -108,7 +108,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableNamesWithEmptyDb() throws SQLException {
+    public void getTableNamesWhenDbHasNoTables() throws SQLException {
         String[] expectedArray = new String[]{};
         String[] actualArray = databaseManager.getTableNames();
         assertArrayEquals(expectedArray, actualArray);
@@ -117,14 +117,14 @@ public class DatabaseManagerTest {
     @Test
     public void getTableDataWithEmptyTable() throws SQLException {
         executeSqlQuery("CREATE TABLE test_table()");
-        DataSet[] expected = new DataSet[0];
-        assertArrayEquals(expected, databaseManager.getTableData("test_table"));
+        DataSet[] expectedArray = new DataSet[0];
+        assertArrayEquals(expectedArray, databaseManager.getTableData("test_table"));
     }
 
     @Test
     public void getTableDataWithNotExistingTable() throws SQLException {
-        DataSet[] expected = new DataSet[0];
-        assertArrayEquals(expected, databaseManager.getTableData("WrongTableName"));
+        DataSet[] expectedArray = new DataSet[0];
+        assertArrayEquals(expectedArray, databaseManager.getTableData("WrongTableName"));
     }
 
     @Test
@@ -141,9 +141,9 @@ public class DatabaseManagerTest {
         DataSet row2 = new DataSet(2);
         row2.insertValue(0, "2");
         row2.insertValue(1, "name2");
-        DataSet[] expected = new DataSet[]{row1, row2};
-        DataSet[] actual = databaseManager.getTableData("test_table");
-        assertThat(actual, arrayContainingInAnyOrder(expected));
+        DataSet[] expectedArray = new DataSet[]{row1, row2};
+        DataSet[] actualArray = databaseManager.getTableData("test_table");
+        assertThat(actualArray, arrayContainingInAnyOrder(expectedArray));
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
