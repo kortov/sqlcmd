@@ -88,7 +88,7 @@ public class DatabaseManager {
                 DataSet dataSet = new DataSet(numberOfColumns);
                 result[index++] = dataSet;
                 for (int i = 0; i < numberOfColumns; i++) {
-                    dataSet.setValue(i, rs.getString(i + 1));
+                    dataSet.insertValue(i, rs.getString(i + 1));
                 }
             }
         }

@@ -115,20 +115,20 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableDataWhenEmptyTableReturnsEmptyArray() throws SQLException {
+    public void getTableDataWithEmptyTable() throws SQLException {
         executeSqlQuery("CREATE TABLE test_table()");
         DataSet[] expected = new DataSet[0];
         assertArrayEquals(expected, databaseManager.getTableData("test_table"));
     }
 
     @Test
-    public void getTableDataWhenWrongTableNameReturnsEmptyArray() throws SQLException {
+    public void getTableDataWithNotExistingTable() throws SQLException {
         DataSet[] expected = new DataSet[0];
         assertArrayEquals(expected, databaseManager.getTableData("WrongTableName"));
     }
 
     @Test
-    public void getTableDataWhenValidDataReturnsTableDataArray() throws SQLException {
+    public void getTableDataWithValidTableTwoRows() throws SQLException {
         executeSqlQuery("CREATE TABLE test_table(" +
                 "id INTEGER," +
                 "name VARCHAR(128)" +
@@ -136,11 +136,11 @@ public class DatabaseManagerTest {
         executeSqlQuery("INSERT INTO test_table VALUES(1,'name1')");
         executeSqlQuery("INSERT INTO test_table VALUES(2,'name2')");
         DataSet row1 = new DataSet(2);
-        row1.setValue(0, "1");
-        row1.setValue(1, "name1");
+        row1.insertValue(0, "1");
+        row1.insertValue(1, "name1");
         DataSet row2 = new DataSet(2);
-        row2.setValue(0, "2");
-        row2.setValue(1, "name2");
+        row2.insertValue(0, "2");
+        row2.insertValue(1, "name2");
         DataSet[] expected = new DataSet[]{row1, row2};
         DataSet[] actual = databaseManager.getTableData("test_table");
         assertThat(actual, arrayContainingInAnyOrder(expected));
