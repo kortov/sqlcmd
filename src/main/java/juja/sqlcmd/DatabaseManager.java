@@ -61,12 +61,12 @@ public class DatabaseManager {
         if (!isTableExists(tableName)) {
             return new DataSet[0];
         }
-        int tableSize = TableSize(tableName);
+        int tableSize = tableSize(tableName);
         if (tableSize == 0) {
             return new DataSet[0];
         }
         DataSet[] dataSets = new DataSet[tableSize];
-        int numberOfColumns = NumberOfColumns(tableName);
+        int numberOfColumns = numberOfColumns(tableName);
         fillDataSets(tableName, dataSets, numberOfColumns);
         return dataSets;
     }
@@ -94,7 +94,7 @@ public class DatabaseManager {
         }
     }
 
-    private int NumberOfColumns(String tableName) throws SQLException {
+    private int numberOfColumns(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName + " LIMIT 1")) {
             ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -102,7 +102,7 @@ public class DatabaseManager {
         }
     }
 
-    private int TableSize(String tableName) throws SQLException {
+    private int tableSize(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      "SELECT COUNT(*) as RECORDS FROM " + tableName)) {
