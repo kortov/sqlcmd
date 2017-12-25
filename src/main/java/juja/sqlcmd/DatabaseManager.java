@@ -37,12 +37,7 @@ public class DatabaseManager {
     public void close() throws SQLException {
         if (connection != null) {
             connection.close();
-            connection = null;
         }
-    }
-
-    public boolean isConnected() {
-        return connection != null;
     }
 
     public String[] getTableNames() throws SQLException {

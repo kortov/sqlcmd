@@ -146,12 +146,6 @@ public class DatabaseManagerTest {
         assertThat(actualArray, arrayContainingInAnyOrder(expectedArray));
     }
 
-    @Test
-    public void close() throws SQLException {
-        databaseManager.close();
-        assertFalse(databaseManager.isConnected());
-    }
-
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.execute(sqlQuery);
