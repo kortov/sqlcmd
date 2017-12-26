@@ -13,8 +13,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DatabaseManagerTest {
@@ -23,7 +25,7 @@ public class DatabaseManagerTest {
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/";
     private static Connection connection;
-    
+
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private PrintStream originalOut;
@@ -41,11 +43,6 @@ public class DatabaseManagerTest {
                 JDBC_URL + TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
     }
 
-    @AfterClass
-    public static void closeConnection() throws SQLException {
-        connection.close();
-    }
-
     @Before
     public void setUpStreamsAndDbManager() throws SQLException {
         recreateDbSchema();
@@ -58,9 +55,15 @@ public class DatabaseManagerTest {
     }
 
     @After
-    public void cleanUpStreams() {
+    public void cleanUpStreams() throws SQLException {
+        databaseManager.close();
         System.setOut(originalOut);
         System.setErr(originalErr);
+    }
+
+    @AfterClass
+    public static void closeConnection() throws SQLException {
+        connection.close();
     }
 
     @Test
@@ -96,7 +99,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableNamesWith2tables() throws SQLException {
+    public void getTableNamesWithTwoTables() throws SQLException {
         executeSqlQuery("CREATE TABLE table1()");
         executeSqlQuery("CREATE TABLE table2()");
         String[] expectedArray = {"table1", "table2"};
@@ -105,10 +108,42 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableNamesWithEmptyDb() throws SQLException {
+    public void getTableNamesWhenDbHasNoTables() throws SQLException {
         String[] expectedArray = new String[]{};
         String[] actualArray = databaseManager.getTableNames();
         assertArrayEquals(expectedArray, actualArray);
+    }
+
+    @Test
+    public void getTableDataWithEmptyTable() throws SQLException {
+        executeSqlQuery("CREATE TABLE test_table()");
+        DataSet[] expectedArray = new DataSet[0];
+        assertArrayEquals(expectedArray, databaseManager.getTableData("test_table"));
+    }
+
+    @Test
+    public void getTableDataWithNotExistingTable() throws SQLException {
+        DataSet[] expectedArray = new DataSet[0];
+        assertArrayEquals(expectedArray, databaseManager.getTableData("WrongTableName"));
+    }
+
+    @Test
+    public void getTableDataWithValidTableTwoRows() throws SQLException {
+        executeSqlQuery("CREATE TABLE test_table(" +
+                "id INTEGER," +
+                "name VARCHAR(128)" +
+                ")");
+        executeSqlQuery("INSERT INTO test_table VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO test_table VALUES(2,'name2')");
+        DataSet row1 = new DataSet(2);
+        row1.insertValue(0, "1");
+        row1.insertValue(1, "name1");
+        DataSet row2 = new DataSet(2);
+        row2.insertValue(0, "2");
+        row2.insertValue(1, "name2");
+        DataSet[] expectedArray = new DataSet[]{row1, row2};
+        DataSet[] actualArray = databaseManager.getTableData("test_table");
+        assertThat(actualArray, arrayContainingInAnyOrder(expectedArray));
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
