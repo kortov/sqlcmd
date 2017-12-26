@@ -2,6 +2,7 @@ package juja.sqlcmd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -30,4 +31,22 @@ public class DatabaseManager {
             return false;
         }
     }
+
+    public String[] getTableNames() throws SQLException {
+        try (ResultSet rs = connection.getMetaData().getTables(
+                null, "public", "%", new String[]{"TABLE"})) {
+            int tablesCount = 0;
+            if (rs.last()) {
+                tablesCount = rs.getRow();
+                rs.beforeFirst();
+            }
+            String[] tableNames = new String[tablesCount];
+            int index = 0;
+            while (rs.next()) {
+                tableNames[index++] = rs.getString("table_name");
+            }
+            return tableNames;
+        }
+    }
+
 }
