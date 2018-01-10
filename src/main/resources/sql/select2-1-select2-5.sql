@@ -30,7 +30,7 @@ SELECT
   name,
   surname
 FROM customers
-WHERE surname SIMILAR TO '([^Vv]*[Vv][^Vv]*){0,2}';
+WHERE name SIMILAR TO '([^Vv]*[Vv][^Vv]*){0,2}';
 
 -- д) Найти имена покупателей, длина имени которых более 3 символов и 4 символ это 'O' (Латинская буква О)
 --  и возраст менее 50 лет.
