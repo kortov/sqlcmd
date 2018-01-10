@@ -18,13 +18,13 @@ SELECT
   name,
   purchase_price
 FROM products
-WHERE purchase_price IN
-      (SELECT max(purchase_price)
-       FROM products
-       WHERE purchase_price IN (SELECT purchase_price
-                                FROM products
-                                WHERE name SIMILAR TO '[^Vv]+[Vv]+[^Vv]+'));
-
+WHERE name SIMILAR TO '[^Vv]+[Vv]+[^Vv]+'
+      AND purchase_price =
+          (SELECT max(purchase_price)
+           FROM products
+           WHERE purchase_price IN (SELECT purchase_price
+                                    FROM products
+                                    WHERE name SIMILAR TO '[^Vv]+[Vv]+[^Vv]+'));
 
 -- г) Найти имена покупателей, в имени которых присутствует буква 'V' и не больше двух раз
 SELECT

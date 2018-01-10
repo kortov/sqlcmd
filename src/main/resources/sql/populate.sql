@@ -22,5 +22,8 @@ VALUES
   , ('product_namev', 103.2)
   , ('vprovduct_namev', 32.2)
   , ('VVproduct_name', 42.2)
+  , ('vproduct_name', 92.2)
+  , ('product_namev', 92.2)
+  , ('product_name', 92.2)
   , ('prodVVuct_name', 2.2);
 
