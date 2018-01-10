@@ -12,18 +12,19 @@ SELECT
 FROM customers
 WHERE surname ILIKE '%OV';
 
--- в) Найти название самого дорогой по закупке товара, в имени которого присутствует буква 'V',
+-- в) Найти название самого дорогого по закупке товара, в имени которого присутствует буква 'V',
 --    но не первая и не последняя.
 SELECT
-  products.name,
-  MAX(products.purchase_price)
-FROM (SELECT *
-      FROM products p
-      WHERE p.name ~* '[^Vv]+[Vv]+[^Vv]+') AS products
-WHERE products.purchase_price = (SELECT MAX(purchase_price)
-                                 FROM products
-                                 WHERE name ~* '[^Vv]+[Vv]+[^Vv]+')
-GROUP BY products.name;
+  name,
+  purchase_price
+FROM products
+WHERE purchase_price IN
+      (SELECT max(purchase_price)
+       FROM products
+       WHERE purchase_price IN (SELECT purchase_price
+                                FROM products
+                                WHERE name SIMILAR TO '[^Vv]+[Vv]+[^Vv]+'));
+
 
 -- г) Найти имена покупателей, в имени которых присутствует буква 'V' и не больше двух раз
 SELECT

@@ -16,6 +16,7 @@ INSERT INTO
 VALUES
   ('vproduct_name', 32.2)
   , ('productv_name', 92.2)
+  , ('productv_name', 92.2)
   , ('vproductv_name', 92.2)
   , ('prodVuct_name', 22.2)
   , ('product_namev', 103.2)
