@@ -24,6 +24,7 @@ public class DatabaseManagerTest {
     private static final String DB_USER_NAME = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/";
+    private static final String TEST_TABLE_NAME = "test_table";
     private static Connection connection;
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -116,9 +117,9 @@ public class DatabaseManagerTest {
 
     @Test
     public void getTableDataWithEmptyTable() throws SQLException {
-        executeSqlQuery("CREATE TABLE test_table()");
+        executeSqlQuery("CREATE TABLE " + TEST_TABLE_NAME + "()");
         DataSet[] expectedArray = new DataSet[0];
-        assertArrayEquals(expectedArray, databaseManager.getTableData("test_table"));
+        assertArrayEquals(expectedArray, databaseManager.getTableData(TEST_TABLE_NAME));
     }
 
     @Test
@@ -129,12 +130,9 @@ public class DatabaseManagerTest {
 
     @Test
     public void getTableDataWithValidTableTwoRows() throws SQLException {
-        executeSqlQuery("CREATE TABLE test_table(" +
-                "id INTEGER," +
-                "name VARCHAR(128)" +
-                ")");
-        executeSqlQuery("INSERT INTO test_table VALUES(1,'name1')");
-        executeSqlQuery("INSERT INTO test_table VALUES(2,'name2')");
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(2,'name2')");
         DataSet row1 = new DataSet(2);
         row1.insertValue(0, "1");
         row1.insertValue(1, "name1");
@@ -142,8 +140,48 @@ public class DatabaseManagerTest {
         row2.insertValue(0, "2");
         row2.insertValue(1, "name2");
         DataSet[] expectedArray = new DataSet[]{row1, row2};
-        DataSet[] actualArray = databaseManager.getTableData("test_table");
+        DataSet[] actualArray = databaseManager.getTableData(TEST_TABLE_NAME);
         assertThat(actualArray, arrayContainingInAnyOrder(expectedArray));
+    }
+
+    @Test
+    public void insertIntoTableWithExistingTable() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        DataSet row = new DataSet(2);
+        row.insertValue(0, "1");
+        row.insertValue(1, "name1");
+        assertTrue(databaseManager.insert(TEST_TABLE_NAME, row));
+    }
+
+    @Test
+    public void insertIntoTableWithNotExistingTable() {
+        DataSet row = new DataSet(2);
+        row.insertValue(0, "1");
+        row.insertValue(1, "name1");
+        assertFalse(databaseManager.insert("tableDoesNotExist", row));
+    }
+
+    @Test
+    public void insertIntoTableWithExceedingNumberOfParameters() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        DataSet row = new DataSet(3);
+        row.insertValue(0, "1");
+        row.insertValue(1, "name1");
+        row.insertValue(2, "name2");
+        assertFalse(databaseManager.insert(TEST_TABLE_NAME, row));
+    }
+
+    @Test
+    public void insertIntoTableRowWithoutId() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        DataSet row = new DataSet(2);
+        row.insertValue(1, "name1");
+        assertFalse(databaseManager.insert(TEST_TABLE_NAME, row));
+    }
+
+    private void createTestTableWithIdAndName(String tableName) throws SQLException {
+        executeSqlQuery("CREATE TABLE " + tableName +
+                "(id INTEGER, name VARCHAR(128))");
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
