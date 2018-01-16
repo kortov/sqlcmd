@@ -179,6 +179,25 @@ public class DatabaseManagerTest {
         assertFalse(databaseManager.insert(TEST_TABLE_NAME, row));
     }
 
+    @Test
+    public void deleteWithExistingTableAndValidData() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(2,'name2')");
+        assertTrue(databaseManager.delete(TEST_TABLE_NAME, 1));
+    }
+
+    @Test
+    public void deleteWithNotExistingTable() {
+        assertFalse(databaseManager.delete("doesNotExist", 1));
+    }
+
+    @Test
+    public void deleteWithNotExistingRowWithSuchId() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        assertFalse(databaseManager.delete(TEST_TABLE_NAME, 1));
+    }
+
     private void createTestTableWithIdAndName(String tableName) throws SQLException {
         executeSqlQuery("CREATE TABLE " + tableName +
                 "(id INTEGER, name VARCHAR(128))");
