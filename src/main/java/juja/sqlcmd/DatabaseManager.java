@@ -82,7 +82,6 @@ public class DatabaseManager {
         }
     }
 
-
     private String dataSetFormatted(DataSet dataSet) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String value : dataSet.values()) {
@@ -93,6 +92,17 @@ public class DatabaseManager {
         }
         return stringBuilder.substring(0, stringBuilder.length() - 1);
     }
+
+    public boolean delete(String tableName, int id) {
+        String sqlQuery = "DELETE FROM " + tableName + " WHERE id=" + id;
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate(sqlQuery);
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
     private boolean isTableExists(String tableName) throws SQLException {
         for (String name : getTableNames()) {
             if (name.equals(tableName)) {
