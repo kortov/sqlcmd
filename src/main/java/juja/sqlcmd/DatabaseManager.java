@@ -71,6 +71,30 @@ public class DatabaseManager {
         return dataSets;
     }
 
+    boolean insert(String tableName, DataSet dataset) {
+        String dataSetFormatted = dataSetFormatted(dataset);
+        String sqlQuery = String.format("INSERT INTO %s VALUES(%s)", tableName, dataSetFormatted);
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sqlQuery);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private String dataSetFormatted(DataSet dataSet) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String value : dataSet.values()) {
+            final String wrappingSymbol = "'";
+            final String valuesSeparator = ",";
+            stringBuilder.append(wrappingSymbol)
+                    .append(value)
+                    .append(wrappingSymbol)
+                    .append(valuesSeparator);
+        }
+        return stringBuilder.substring(0, stringBuilder.length() - 1);
+    }
+
     private boolean isTableExists(String tableName) throws SQLException {
         for (String name : getTableNames()) {
             if (name.equals(tableName)) {
@@ -111,5 +135,4 @@ public class DatabaseManager {
             else return 0;
         }
     }
-
 }
