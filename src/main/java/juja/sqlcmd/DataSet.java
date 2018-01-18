@@ -19,6 +19,10 @@ public class DataSet {
         row[columnIndex] = string;
     }
 
+    public String[] values() {
+        return row.clone();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
