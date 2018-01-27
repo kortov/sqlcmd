@@ -1,7 +1,6 @@
 package juja.sqlcmd;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,12 +36,6 @@ public class DatabaseManagerConnectTest {
         connection = DriverManager.getConnection(JDBC_URL + ADMIN_DB_NAME, DB_ADMIN_LOGIN, DB_ADMIN_PASSWORD);
         executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
         executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME + " OWNER =" + DB_USER_LOGIN);
-        connection.close();
-        connection = DriverManager.getConnection(JDBC_URL + TEST_DB_NAME, DB_USER_LOGIN, DB_USER_PASSWORD);
-    }
-
-    @AfterClass
-    public static void closeConnection() throws SQLException {
         connection.close();
     }
 
