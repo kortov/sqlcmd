@@ -40,7 +40,7 @@ public class DatabaseManagerTest {
     }
 
     @Before
-    public void setUpDbManager() throws SQLException {
+    public void setUp() throws SQLException {
         recreateDbSchema();
         databaseManager = new DatabaseManager();
         databaseManager.connect(TEST_DB_NAME, DB_USER_LOGIN, DB_USER_PASSWORD);
