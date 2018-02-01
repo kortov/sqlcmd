@@ -47,7 +47,7 @@ public class DatabaseManagerTest {
     }
 
     @After
-    public void closeDbManagerConnection() throws SQLException {
+    public void closeResources() throws SQLException {
         databaseManager.close();
     }
 
