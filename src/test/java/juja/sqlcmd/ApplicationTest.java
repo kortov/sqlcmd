@@ -40,9 +40,7 @@ public class ApplicationTest {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        String expected = "user" + LINE_SEPARATOR +
-                LINE_SEPARATOR +
-                "db is empty" + LINE_SEPARATOR +
+        String expected = "db is empty" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
                 "table is empty" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
