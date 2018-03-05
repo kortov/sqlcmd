@@ -15,7 +15,7 @@ import java.sql.Statement;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DatabaseManagerConnectTest {
+public class JdbcDatabaseManagerConnectTest {
     private static final String ADMIN_DB_NAME = "postgres";
     private static final String TEST_DB_NAME = "sqlcmd_test";
     private static final String DB_ADMIN_LOGIN = "postgres";
@@ -41,7 +41,7 @@ public class DatabaseManagerConnectTest {
 
     @Before
     public void setUpStreamsAndDbManager() {
-        databaseManager = new DatabaseManager();
+        databaseManager = new JdbcDatabaseManager();
         originalOut = System.out;
         originalErr = System.err;
         System.setOut(new PrintStream(outContent));
@@ -77,13 +77,13 @@ public class DatabaseManagerConnectTest {
 
     @Test
     public void initDatabaseManagerWithInvalidJdbcDriver() {
-        databaseManager = new DatabaseManager("noDriver", "jdbc:postgresql://localhost:5432/");
+        databaseManager = new JdbcDatabaseManager("noDriver", "jdbc:postgresql://localhost:5432/");
         assertFalse(databaseManager.connect(TEST_DB_NAME, DB_USER_LOGIN, DB_USER_PASSWORD));
     }
 
     @Test
     public void initDatabaseManagerWithInvalidJdbcUrl() {
-        databaseManager = new DatabaseManager("org.postgresql.Driver", "noJdbcUrl");
+        databaseManager = new JdbcDatabaseManager("org.postgresql.Driver", "noJdbcUrl");
         assertFalse(databaseManager.connect(TEST_DB_NAME, DB_USER_LOGIN, DB_USER_PASSWORD));
     }
 
