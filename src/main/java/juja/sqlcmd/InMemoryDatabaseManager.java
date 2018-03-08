@@ -12,14 +12,14 @@ public class InMemoryDatabaseManager implements DatabaseManager {
         this.tables = new HashMap<>();
     }
 
-    public void createTable(String tableName, int columns_number) {
+    public void createTable(String tableName, int columnsNumber) {
         if (tableName == null) {
             throw new IllegalArgumentException("Table name must not be null!");
         }
-        if (columns_number < 0) {
+        if (columnsNumber < 0) {
             throw new IllegalArgumentException("Number of columns must be positive!");
         }
-        tables.put(tableName, new Table(columns_number));
+        tables.put(tableName, new Table(columnsNumber));
     }
 
     @Override
