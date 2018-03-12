@@ -3,7 +3,7 @@ package juja.sqlcmd.view;
 import java.util.Scanner;
 
 public class Console implements View {
-    Scanner scanner;
+    private Scanner scanner;
 
     public Console() {
         scanner = new Scanner(System.in);

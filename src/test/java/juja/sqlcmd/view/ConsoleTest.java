@@ -20,11 +20,11 @@ public class ConsoleTest {
     private PrintStream originalOut;
     private PrintStream originalErr;
     private InputStream originalIn;
-    private View console;
+    private View view;
 
     @Before
     public void setUpStreams() {
-        console = new Console();
+        view = new Console();
         originalOut = System.out;
         originalErr = System.err;
         originalIn = System.in;
@@ -43,7 +43,7 @@ public class ConsoleTest {
     public void writeEmptyLine() {
         String testLine = "";
         String expected = testLine + LINE_SEPARATOR;
-        console.write(testLine);
+        view.write(testLine);
         assertEquals(expected, outContent.toString());
     }
 
@@ -51,7 +51,7 @@ public class ConsoleTest {
     public void writeOneLine() {
         String testLine = "the first line";
         String expected = testLine + LINE_SEPARATOR;
-        console.write(testLine);
+        view.write(testLine);
         assertEquals(expected, outContent.toString());
     }
 
@@ -61,7 +61,7 @@ public class ConsoleTest {
                 "the second line" + LINE_SEPARATOR +
                 "the third line";
         String expected = testLines + LINE_SEPARATOR;
-        console.write(testLines);
+        view.write(testLines);
         assertEquals(expected, outContent.toString());
     }
 
@@ -70,27 +70,27 @@ public class ConsoleTest {
         String expected = "";
         ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
         System.setIn(in);
-        String actual = console.read();
+        String actual = view.read();
         assertEquals(expected, actual);
     }
 
     @Test
     public void readOneLine() {
-        String expected = "test input from console";
+        String expected = "test input";
         ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
         System.setIn(in);
-        String actual = console.read();
+        String actual = view.read();
         assertEquals(expected, actual);
     }
 
     @Test
     public void readTwoLinesReadsOnlyFirstLine() {
-        String firstInputLine = "the first line from console";
+        String firstInputLine = "the first line";
         String expected = firstInputLine + LINE_SEPARATOR +
-                "the second line from console";
+                "the second line";
         ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
         System.setIn(in);
-        String actual = console.read();
+        String actual = view.read();
         assertEquals(firstInputLine, actual);
     }
 }
