@@ -14,28 +14,23 @@ import static org.junit.Assert.assertEquals;
 public class ConsoleTest {
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-
+    private ByteArrayOutputStream outputStream;
     private PrintStream originalOut;
-    private PrintStream originalErr;
     private InputStream originalIn;
     private View view;
 
     @Before
-    public void setUpStreams() {
-        view = new Console();
+    public void setUp() {
         originalOut = System.out;
-        originalErr = System.err;
         originalIn = System.in;
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
+        outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+        view = new Console();
     }
 
     @After
     public void cleanUpStreams() {
         System.setOut(originalOut);
-        System.setErr(originalErr);
         System.setIn(originalIn);
     }
 
@@ -44,7 +39,7 @@ public class ConsoleTest {
         String testLine = "";
         String expected = testLine + LINE_SEPARATOR;
         view.write(testLine);
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test
@@ -52,45 +47,44 @@ public class ConsoleTest {
         String testLine = "the first line";
         String expected = testLine + LINE_SEPARATOR;
         view.write(testLine);
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test
-    public void writeThreeLines() {
+    public void writeTwoLines() {
         String testLines = "the first line" + LINE_SEPARATOR +
-                "the second line" + LINE_SEPARATOR +
-                "the third line";
+                "the second line";
         String expected = testLines + LINE_SEPARATOR;
         view.write(testLines);
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test(expected = java.util.NoSuchElementException.class)
     public void readEmptyLine() {
         String expected = "";
-        ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
-        System.setIn(in);
-        String actual = view.read();
-        assertEquals(expected, actual);
+        setInputStreamMessage(expected);
+        assertEquals(expected, view.read());
     }
 
     @Test
     public void readOneLine() {
         String expected = "test input";
-        ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
-        System.setIn(in);
-        String actual = view.read();
-        assertEquals(expected, actual);
+        setInputStreamMessage(expected);
+        assertEquals(expected, view.read());
     }
 
     @Test
     public void readTwoLinesReadsOnlyFirstLine() {
         String firstInputLine = "the first line";
-        String expected = firstInputLine + LINE_SEPARATOR +
+        String message = firstInputLine + LINE_SEPARATOR +
                 "the second line";
-        ByteArrayInputStream in = new ByteArrayInputStream(expected.getBytes());
-        System.setIn(in);
-        String actual = view.read();
-        assertEquals(firstInputLine, actual);
+        setInputStreamMessage(message);
+        assertEquals(firstInputLine, view.read());
+    }
+
+    private void setInputStreamMessage(String message) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(message.getBytes());
+        view = new Console(inputStream, outputStream);
+        System.setIn(inputStream);
     }
 }
