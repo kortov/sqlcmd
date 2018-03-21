@@ -23,10 +23,4 @@ public class InMemoryDatabaseManagerTest extends AbstractDatabaseManagerTest {
         inMemoryDatabaseManager = (InMemoryDatabaseManager) databaseManager;
         inMemoryDatabaseManager.createTable(tableName, 2);
     }
-
-    @Override
-    void insertData(String tableName, DataSet row) {
-        inMemoryDatabaseManager = (InMemoryDatabaseManager) databaseManager;
-        inMemoryDatabaseManager.insert(tableName, row);
-    }
 }

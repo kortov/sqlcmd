@@ -51,7 +51,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean delete(String tableName, int id) {
-        throw new UnsupportedOperationException();
+        Table table = tables.get(tableName);
+        return table != null && table.delete(id);
     }
 
     @Override
@@ -81,6 +82,24 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             }
             rows.add(row);
             return true;
+        }
+
+        boolean delete(int id) {
+            int rowIndexWithId = findRowById(id);
+            if (rowIndexWithId != -1) {
+                rows.remove(rowIndexWithId);
+                return true;
+            }
+            return false;
+        }
+
+        private int findRowById(int id) {
+            for (int index = 0; index < rows.size(); index++) {
+                DataSet currentRow = rows.get(index);
+                String currentRowId = currentRow.values()[0];
+                if (currentRowId.equals(String.valueOf(id))) return index;
+            }
+            return -1;
         }
 
         private boolean isRowContainsNull(DataSet row) {
