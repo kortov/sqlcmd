@@ -77,7 +77,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             if (row.getRowSize() != columnsNumber) {
                 return false;
             }
-            if (isRowContainsNull(row)) {
+            if (hasRowNullElement(row)) {
                 return false;
             }
             rows.add(row);
@@ -97,12 +97,14 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             for (int index = 0; index < rows.size(); index++) {
                 DataSet currentRow = rows.get(index);
                 String currentRowId = currentRow.values()[0];
-                if (currentRowId.equals(String.valueOf(id))) return index;
+                if (currentRowId.equals(String.valueOf(id))) {
+                    return index;
+                }
             }
             return -1;
         }
 
-        private boolean isRowContainsNull(DataSet row) {
+        private boolean hasRowNullElement(DataSet row) {
             for (String s : row.values()) {
                 if (s == null) {
                     return true;
