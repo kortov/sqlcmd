@@ -55,15 +55,8 @@ public abstract class AbstractDatabaseManagerTest {
     @Test
     public void getTableDataWithValidTableTwoRows() throws SQLException {
         createTestTableWithIdAndName(TEST_TABLE_NAME);
-        DataSet row1 = new DataSet(2);
-        row1.insertValue(0, "1");
-        row1.insertValue(1, "name1");
-        insertData(TEST_TABLE_NAME, row1);
-        DataSet row2 = new DataSet(2);
-        row2.insertValue(0, "2");
-        row2.insertValue(1, "name2");
-        insertData(TEST_TABLE_NAME, row2);
-        DataSet[] expectedArray = new DataSet[]{row1, row2};
+        DataSet[] expectedArray = fillDataSetsWithIdAndName(2);
+        insertDataSets(TEST_TABLE_NAME, expectedArray);
         DataSet[] actualArray = databaseManager.getTableData(TEST_TABLE_NAME);
         assertThat(actualArray, arrayContainingInAnyOrder(expectedArray));
     }
@@ -71,18 +64,16 @@ public abstract class AbstractDatabaseManagerTest {
     @Test
     public void insertWithExistingTable() throws SQLException {
         createTestTableWithIdAndName(TEST_TABLE_NAME);
-        DataSet row = new DataSet(2);
-        row.insertValue(0, "1");
-        row.insertValue(1, "name1");
-        assertTrue(databaseManager.insert(TEST_TABLE_NAME, row));
+        int rowsNumber = 1;
+        DataSet[] expected = fillDataSetsWithIdAndName(rowsNumber);
+        assertTrue(databaseManager.insert(TEST_TABLE_NAME, expected[rowsNumber - 1]));
     }
 
     @Test
     public void insertWithNotExistingTable() {
-        DataSet row = new DataSet(2);
-        row.insertValue(0, "1");
-        row.insertValue(1, "name1");
-        assertFalse(databaseManager.insert("tableDoesNotExist", row));
+        int rowsNumber = 1;
+        DataSet[] expected = fillDataSetsWithIdAndName(rowsNumber);
+        assertFalse(databaseManager.insert("tableDoesNotExist", expected[rowsNumber - 1]));
     }
 
     @Test
@@ -103,9 +94,23 @@ public abstract class AbstractDatabaseManagerTest {
         assertFalse(databaseManager.insert(TEST_TABLE_NAME, row));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void delete() {
-        databaseManager.delete(TEST_TABLE_NAME, 1);
+    @Test
+    public void deleteWithExistingTableAndValidData() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        DataSet[] expected = fillDataSetsWithIdAndName(2);
+        insertDataSets(TEST_TABLE_NAME, expected);
+        assertTrue(databaseManager.delete(TEST_TABLE_NAME, 1));
+    }
+
+    @Test
+    public void deleteWithNotExistingTable() {
+        assertFalse(databaseManager.delete("doesNotExist", 1));
+    }
+
+    @Test
+    public void deleteWithNotExistingRowWithSuchId() throws SQLException {
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        assertFalse(databaseManager.delete(TEST_TABLE_NAME, 1));
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -113,10 +118,23 @@ public abstract class AbstractDatabaseManagerTest {
         databaseManager.update(TEST_TABLE_NAME, 1);
     }
 
-    void insertData(String testTableName, DataSet row) {
-        databaseManager.insert(testTableName, row);
+    private DataSet[] fillDataSetsWithIdAndName(int rowsNumber) {
+        DataSet[] insertedRows = new DataSet[rowsNumber];
+        for (int i = 0; i < rowsNumber; i++) {
+            int id = i + 1;
+            DataSet row = new DataSet(2);
+            row.insertValue(0, String.valueOf(id));
+            row.insertValue(1, "name" + id);
+            insertedRows[i] = row;
+        }
+        return insertedRows;
+    }
+
+    private void insertDataSets(String testTableName, DataSet[] rows) {
+        for (DataSet row : rows) {
+            databaseManager.insert(testTableName, row);
+        }
     }
 
     abstract void createTestTableWithIdAndName(String tableName) throws SQLException;
-
 }

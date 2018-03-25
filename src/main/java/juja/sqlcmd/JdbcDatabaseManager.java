@@ -87,9 +87,14 @@ public class JdbcDatabaseManager implements DatabaseManager {
         }
     }
 
-    @Override
     public boolean delete(String tableName, int id) {
-        throw new UnsupportedOperationException();
+        String sqlQuery = "DELETE FROM " + tableName + " WHERE id=" + id;
+        try (Statement statement = connection.createStatement()) {
+            int affectedRows = statement.executeUpdate(sqlQuery);
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override
