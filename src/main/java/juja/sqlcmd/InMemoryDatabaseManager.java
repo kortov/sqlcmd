@@ -60,6 +60,11 @@ public class InMemoryDatabaseManager implements DatabaseManager {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
+
     private static class Table {
         private List<DataSet> rows;
         private int columnsNumber;

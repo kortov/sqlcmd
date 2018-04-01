@@ -102,6 +102,11 @@ public class JdbcDatabaseManager implements DatabaseManager {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public boolean isConnected() {
+        return connection != null;
+    }
+
     private String dataSetFormatted(DataSet dataSet) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String value : dataSet.values()) {

@@ -16,4 +16,6 @@ public interface DatabaseManager {
     boolean delete(String tableName, int id);
 
     boolean update(String tableName, int id);
+
+    boolean isConnected();
 }
