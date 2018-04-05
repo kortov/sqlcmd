@@ -5,29 +5,28 @@ import juja.sqlcmd.command.Command;
 import juja.sqlcmd.command.CommandType;
 import juja.sqlcmd.view.View;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Handler {
+public class CommandHandler {
     private DatabaseManager databaseManager;
     private View view;
     private CommandFactory commandFactory;
 
-    public Handler(DatabaseManager databaseManager, View view) {
+    public CommandHandler(DatabaseManager databaseManager, View view) {
         this.databaseManager = databaseManager;
         this.view = view;
         commandFactory = new CommandFactory();
     }
 
-    public void handle(String userInput) {
+    public void handleCommand(String userInput) {
         String commandLiteral = getFirstWord(userInput);
         Command command = getCommand(commandLiteral);
 
         if (hasConnection()) {
-            command.execute(userInput, this);
+            command.executeConnected(userInput, this);
         } else {
-            command.executeWithoutConnection(userInput, this);
+            command.executeDisconnected(userInput, this);
         }
     }
 
@@ -48,7 +47,7 @@ public class Handler {
         private Map<String, Command> commandMap = new HashMap<>();
 
         {
-            for (CommandType commandType : EnumSet.allOf(CommandType.class)) {
+            for (CommandType commandType : CommandType.values()) {
                 commandMap.put(commandType.getName(), commandType.getCommand());
             }
         }

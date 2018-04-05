@@ -1,9 +1,9 @@
 package juja.sqlcmd.command;
 
-import juja.sqlcmd.controller.Handler;
+import juja.sqlcmd.controller.CommandHandler;
 
 public interface Command {
-    void execute(String userInput, Handler handler);
+    void executeConnected(String userInput, CommandHandler commandHandler);
 
-    void executeWithoutConnection(String userInput, Handler handler);
+    void executeDisconnected(String userInput, CommandHandler commandHandler);
 }

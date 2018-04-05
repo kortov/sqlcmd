@@ -1,7 +1,7 @@
 package juja.sqlcmd.command;
 
 import juja.sqlcmd.DatabaseManager;
-import juja.sqlcmd.controller.Handler;
+import juja.sqlcmd.controller.CommandHandler;
 import juja.sqlcmd.view.View;
 
 import java.sql.SQLException;
@@ -9,9 +9,9 @@ import java.sql.SQLException;
 public class Exit implements Command {
 
     @Override
-    public void execute(String userInput, Handler handler) {
-        DatabaseManager databaseManager = handler.getDatabaseManager();
-        View view = handler.getView();
+    public void executeConnected(String userInput, CommandHandler commandHandler) {
+        DatabaseManager databaseManager = commandHandler.getDatabaseManager();
+        View view = commandHandler.getView();
         try {
             databaseManager.close();
         } catch (SQLException e) {
@@ -21,8 +21,8 @@ public class Exit implements Command {
     }
 
     @Override
-    public void executeWithoutConnection(String userInput, Handler handler) {
-        View view = handler.getView();
+    public void executeDisconnected(String userInput, CommandHandler commandHandler) {
+        View view = commandHandler.getView();
         view.write("Привет и пока!");
     }
 }

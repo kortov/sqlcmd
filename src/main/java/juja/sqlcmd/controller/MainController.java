@@ -13,13 +13,13 @@ public class MainController {
     }
 
     public void run() {
-        Handler handler = new Handler(databaseManager, view);
+        CommandHandler commandHandler = new CommandHandler(databaseManager, view);
         view.write("Привет юзер!");
         view.write("Введи, пожалуйста имя базы данных, имя пользователя и пароль в формате: connect|database|userName|password");
 
         while (true) {
             String input = view.read();
-            handler.handle(input);
+            commandHandler.handleCommand(input);
             view.write("Введи команду (или help для помощи):");
         }
     }
