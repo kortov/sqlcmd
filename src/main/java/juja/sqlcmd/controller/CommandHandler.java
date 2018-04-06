@@ -26,7 +26,7 @@ public class CommandHandler {
         executable.execute(userInput);
     }
 
-    private Executable getCommand(String commandLiteral) {
+    private Command getCommand(String commandLiteral) {
         return commandFactory.getCommand(commandLiteral);
     }
 
@@ -47,13 +47,13 @@ public class CommandHandler {
             }
         }
 
-        Executable getCommand(String commandLiteral) {
-            Executable executable = commandMap.get(commandLiteral);
-            if (executable == null) {
-                executable = commandMap.get(CommandType.UNSUPPORTED.getName());
-                return executable;
+        Command getCommand(String commandLiteral) {
+            Command command = commandMap.get(commandLiteral);
+            if (command == null) {
+                command = commandMap.get(CommandType.UNSUPPORTED.getName());
+                return command;
             }
-            return executable;
+            return command;
         }
     }
 }
