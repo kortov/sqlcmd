@@ -22,7 +22,7 @@ public class CommandHandler {
 
     public void handleCommand(String userInput) {
         String commandLiteral = getFirstWord(userInput);
-        Executable executable = getCommand(commandLiteral);
+        Executable executable = getCommand(commandLiteral.toLowerCase());
         executable.execute(userInput);
     }
 
@@ -43,7 +43,7 @@ public class CommandHandler {
                 Command command = commandType.getInstance();
                 command.setDatabaseManager(databaseManager);
                 command.setView(view);
-                commandMap.put(commandType.getName(), command);
+                commandMap.put(commandType.getName().toLowerCase(), command);
             }
         }
 

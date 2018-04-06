@@ -20,6 +20,9 @@ public class MainController {
         while (true) {
             String input = view.read();
             commandHandler.handleCommand(input);
+            if (input.toLowerCase().equals("exit")) {
+                break;
+            }
             view.write("Введи команду (или help для помощи):");
         }
     }
