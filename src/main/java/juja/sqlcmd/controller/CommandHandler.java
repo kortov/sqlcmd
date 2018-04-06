@@ -3,6 +3,7 @@ package juja.sqlcmd.controller;
 import juja.sqlcmd.DatabaseManager;
 import juja.sqlcmd.command.Command;
 import juja.sqlcmd.command.CommandType;
+import juja.sqlcmd.command.Executable;
 import juja.sqlcmd.view.View;
 
 import java.util.HashMap;
@@ -21,20 +22,11 @@ public class CommandHandler {
 
     public void handleCommand(String userInput) {
         String commandLiteral = getFirstWord(userInput);
-        Command command = getCommand(commandLiteral);
-
-        if (hasConnection()) {
-            command.executeConnected(userInput, this);
-        } else {
-            command.executeDisconnected(userInput, this);
-        }
+        Executable executable = getCommand(commandLiteral);
+        executable.execute(userInput);
     }
 
-    private boolean hasConnection() {
-        return databaseManager.isConnected();
-    }
-
-    private Command getCommand(String commandLiteral) {
+    private Executable getCommand(String commandLiteral) {
         return commandFactory.getCommand(commandLiteral);
     }
 
@@ -48,25 +40,20 @@ public class CommandHandler {
 
         {
             for (CommandType commandType : CommandType.values()) {
-                commandMap.put(commandType.getName(), commandType.getCommand());
+                Command command = commandType.getInstance();
+                command.setDatabaseManager(databaseManager);
+                command.setView(view);
+                commandMap.put(commandType.getName(), command);
             }
         }
 
-        Command getCommand(String commandLiteral) {
-            Command command = commandMap.get(commandLiteral);
-            if (command == null) {
-                command = commandMap.get(CommandType.UNSUPPORTED.getName());
-                return command;
+        Executable getCommand(String commandLiteral) {
+            Executable executable = commandMap.get(commandLiteral);
+            if (executable == null) {
+                executable = commandMap.get(CommandType.UNSUPPORTED.getName());
+                return executable;
             }
-            return command;
+            return executable;
         }
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
-    public View getView() {
-        return view;
     }
 }

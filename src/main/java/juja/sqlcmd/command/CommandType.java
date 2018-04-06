@@ -1,37 +1,38 @@
 package juja.sqlcmd.command;
 
+import java.util.function.Supplier;
+
 public enum CommandType {
     CONNECT_TO_DB(
             "connect",
-            new ConnectToDB()
+            ConnectToDB::new
     ),
     EXIT(
             "exit",
-            new Exit()
+            Exit::new
     ),
     HELP(
             "help",
-            new Help()
+            Help::new
     ),
     UNSUPPORTED(
             "unsupported",
-            new Unsupported()
+            Unsupported::new
     );
 
     private String name;
-    private Command command;
+    private Supplier<Command> instantiator;
 
-
-    CommandType(String name, Command command) {
+    CommandType(String name, Supplier<Command> instantiator) {
         this.name = name;
-        this.command = command;
+        this.instantiator = instantiator;
     }
 
     public String getName() {
         return name;
     }
 
-    public Command getCommand() {
-        return command;
+    public Command getInstance() {
+        return instantiator.get();
     }
 }

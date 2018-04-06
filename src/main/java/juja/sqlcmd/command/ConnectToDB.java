@@ -1,21 +1,14 @@
 package juja.sqlcmd.command;
 
-import juja.sqlcmd.DatabaseManager;
-import juja.sqlcmd.controller.CommandHandler;
-import juja.sqlcmd.view.View;
-
-public class ConnectToDB implements Command {
+public class ConnectToDB extends Command {
 
     @Override
-    public void executeConnected(String userInput, CommandHandler commandHandler) {
-        View view = commandHandler.getView();
+    public void executeConnected(String userInput) {
         view.write("Ты уже подключился");
     }
 
     @Override
-    public void executeDisconnected(String userInput, CommandHandler commandHandler) {
-        DatabaseManager databaseManager = commandHandler.getDatabaseManager();
-        View view = commandHandler.getView();
+    public void executeDisconnected(String userInput) {
         String[] connectionData = userInput.split("\\|");
         int dbIndex = 1;
         int userNameIndex = 2;
