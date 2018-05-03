@@ -1,4 +1,4 @@
-package juja.sqlcmd;
+package juja.sqlcmd.model;
 
 import java.sql.SQLException;
 
@@ -16,4 +16,6 @@ public interface DatabaseManager {
     boolean delete(String tableName, int id);
 
     boolean update(String tableName, int id);
+
+    boolean isConnected();
 }

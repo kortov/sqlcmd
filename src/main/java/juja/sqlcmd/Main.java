@@ -1,6 +1,8 @@
 package juja.sqlcmd;
 
 import juja.sqlcmd.controller.MainController;
+import juja.sqlcmd.model.DatabaseManager;
+import juja.sqlcmd.model.JdbcDatabaseManager;
 import juja.sqlcmd.view.Console;
 import juja.sqlcmd.view.View;
 

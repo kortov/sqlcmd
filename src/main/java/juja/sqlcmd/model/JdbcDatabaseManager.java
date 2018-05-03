@@ -1,4 +1,4 @@
-package juja.sqlcmd;
+package juja.sqlcmd.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +17,7 @@ public class JdbcDatabaseManager implements DatabaseManager {
         jdbcUrl = "jdbc:postgresql://localhost:5432/";
     }
 
-    JdbcDatabaseManager(String jdbcDriverClass, String jdbcUrl) {
+    public JdbcDatabaseManager(String jdbcDriverClass, String jdbcUrl) {
         this.jdbcDriverClass = jdbcDriverClass;
         this.jdbcUrl = jdbcUrl;
     }
@@ -100,6 +100,11 @@ public class JdbcDatabaseManager implements DatabaseManager {
     @Override
     public boolean update(String tableName, int id) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connection != null;
     }
 
     private String dataSetFormatted(DataSet dataSet) {

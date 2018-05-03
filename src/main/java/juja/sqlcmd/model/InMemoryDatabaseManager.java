@@ -1,4 +1,4 @@
-package juja.sqlcmd;
+package juja.sqlcmd.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +58,11 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public boolean update(String tableName, int id) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return true;
     }
 
     private static class Table {
