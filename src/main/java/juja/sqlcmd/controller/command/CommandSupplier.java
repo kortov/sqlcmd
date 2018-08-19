@@ -5,5 +5,5 @@ import juja.sqlcmd.view.View;
 
 @FunctionalInterface
 public interface CommandSupplier<C extends Command> {
-    C apply(DatabaseManager databaseManager, View view);
+    C get(DatabaseManager databaseManager, View view);
 }

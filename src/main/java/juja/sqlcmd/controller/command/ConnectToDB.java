@@ -23,7 +23,7 @@ public class ConnectToDB extends Command {
         String dbName = connectionData[dbIndex];
         String userName = connectionData[userNameIndex];
         String password = connectionData[userPasswordIndex];
-        databaseManager.connect(dbName, userName, password);
+        boolean isConnected = databaseManager.connect(dbName, userName, password);
         view.write("You've connected successfully");
     }
 }

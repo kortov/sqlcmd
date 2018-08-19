@@ -56,7 +56,7 @@ public class CommandHandler {
 
         private <V extends Command> V createCommand(DatabaseManager databaseManager, View view,
                                                     CommandSupplier<V> commandSupplier) {
-            return commandSupplier.apply(databaseManager, view);
+            return commandSupplier.get(databaseManager, view);
         }
 
         Command getCommand(String commandLiteral) {
