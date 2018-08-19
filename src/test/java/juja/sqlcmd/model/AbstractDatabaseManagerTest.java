@@ -1,4 +1,4 @@
-package juja.sqlcmd;
+package juja.sqlcmd.model;
 
 import org.junit.Assert;
 import org.junit.Test;
