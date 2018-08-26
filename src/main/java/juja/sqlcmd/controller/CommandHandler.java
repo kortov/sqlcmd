@@ -10,7 +10,6 @@ import juja.sqlcmd.view.View;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class CommandHandler {
     private DatabaseManager databaseManager;
@@ -42,9 +41,9 @@ public class CommandHandler {
 
         {
             for (CommandType commandType : CommandType.values()) {
-                CommandSupplier commandSupplier = commandType.getCommandSupplier();
+                CommandSupplier<? extends Command> commandSupplier = commandType.getCommandSupplier();
                 Command command = createCommand(databaseManager, view, commandSupplier);
-                command.setCommandType(Optional.of(commandType));
+                command.setCommandType(commandType);
                 putCommandIntoMap(commandType, command);
             }
 

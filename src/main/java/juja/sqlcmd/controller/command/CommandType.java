@@ -24,7 +24,7 @@ public enum CommandType {
 
     private String name;
     private String commandPattern;
-    private CommandSupplier commandSupplier;
+    private CommandSupplier<? extends Command> commandSupplier;
 
     <C extends Command> CommandType(String name, String commandPattern, CommandSupplier<C> commandSupplier) {
         this.name = name;
@@ -40,7 +40,7 @@ public enum CommandType {
         return commandPattern;
     }
 
-    public CommandSupplier getCommandSupplier() {
+    public CommandSupplier<? extends Command> getCommandSupplier() {
         return commandSupplier;
     }
 }

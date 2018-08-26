@@ -4,23 +4,20 @@ import juja.sqlcmd.model.DatabaseManager;
 import juja.sqlcmd.utils.Commands;
 import juja.sqlcmd.view.View;
 
-import java.util.Optional;
-
 public abstract class Command implements Executable {
     protected DatabaseManager databaseManager;
     protected View view;
-    private Optional<CommandType> commandType;
-    private Optional<Integer> sizeOfSplitCommand;
+    private CommandType commandType;
+    private int sizeOfSplitCommand;
 
     public Command(DatabaseManager databaseManager, View view) {
         this.databaseManager = databaseManager;
         this.view = view;
     }
 
-    public void setCommandType(Optional<CommandType> commandType) {
+    public void setCommandType(CommandType commandType) {
         this.commandType = commandType;
-        sizeOfSplitCommand = Optional.of(
-                Commands.sizeOfSplitArray(commandType.get().getCommandPattern()));
+        sizeOfSplitCommand = Commands.sizeOfSplitArray(commandType.getCommandPattern());
     }
 
     @Override
@@ -37,13 +34,13 @@ public abstract class Command implements Executable {
     }
 
     private boolean isCommandPatternValid(String userInput) {
-        return sizeOfSplitCommand.get() == Commands.sizeOfSplitArray(userInput);
+        return sizeOfSplitCommand == Commands.sizeOfSplitArray(userInput);
     }
 
 
     private void writeInvalidArgumentsMessage() {
         view.write("Проверьте правильность ввода команды, команда должна быть вида:" + System.lineSeparator() +
-                commandType.get());
+                commandType);
     }
 
 

@@ -19,7 +19,7 @@ public class JdbcDatabaseManagerConnectTest {
     private static final String ADMIN_DB_NAME = "postgres";
     private static final String TEST_DB_NAME = "sqlcmd_test";
     private static final String DB_ADMIN_LOGIN = "postgres";
-    private static final String DB_ADMIN_PASSWORD = "root";
+    private static final String DB_ADMIN_PASSWORD = "rQ1znMrfg2LObv|h";
     private static final String DB_USER_LOGIN = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/";
