@@ -39,8 +39,8 @@ public abstract class Command implements Executable {
 
 
     private void writeInvalidArgumentsMessage() {
-        view.write("Проверьте правильность ввода команды, команда должна быть вида:" + System.lineSeparator() +
-                commandType);
+        view.write("Проверьте правильность ввода команды, команда должна быть вида: " +
+                commandType.getCommandPattern());
     }
 
 

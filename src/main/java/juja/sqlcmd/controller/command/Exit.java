@@ -16,7 +16,7 @@ public class Exit extends Command {
         try {
             databaseManager.close();
         } catch (SQLException e) {
-            view.write("Упс" + e.getMessage());
+            view.write("Упс " + e.getMessage());
         }
         view.write("Пока!");
     }

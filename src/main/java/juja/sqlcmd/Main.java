@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         View view = new Console();
         DatabaseManager databaseManager = new JdbcDatabaseManager();
-        MainController controller = new MainController(view, databaseManager);
+        MainController controller = new MainController(databaseManager, view);
         controller.run();
     }
 }

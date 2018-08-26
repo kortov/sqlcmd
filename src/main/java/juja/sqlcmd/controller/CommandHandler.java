@@ -24,7 +24,7 @@ public class CommandHandler {
 
     public void handleCommand(String userInput) {
         String commandLiteral = getFirstWord(userInput);
-        Executable executable = getCommand(commandLiteral.toLowerCase());
+        Executable executable = getCommand(commandLiteral.trim().toLowerCase());
         executable.execute(userInput);
     }
 

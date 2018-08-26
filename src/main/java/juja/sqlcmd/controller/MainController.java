@@ -7,7 +7,7 @@ public class MainController {
     private View view;
     private DatabaseManager databaseManager;
 
-    public MainController(View view, DatabaseManager databaseManager) {
+    public MainController(DatabaseManager databaseManager, View view) {
         this.view = view;
         this.databaseManager = databaseManager;
     }

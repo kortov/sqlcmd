@@ -11,7 +11,7 @@ public class ConnectToDB extends Command {
 
     @Override
     protected void executeConnected(String userInput) {
-        view.write("You've already connected");
+        view.write("Вы уже подключились к базе");
     }
 
     @Override
@@ -24,6 +24,10 @@ public class ConnectToDB extends Command {
         String userName = connectionData[userNameIndex];
         String password = connectionData[userPasswordIndex];
         boolean isConnected = databaseManager.connect(dbName, userName, password);
-        view.write("You've connected successfully");
+        if (isConnected) {
+            view.write("Подключено успешно");
+        } else {
+            view.write("Произошла ошибка подключения");
+        }
     }
 }
