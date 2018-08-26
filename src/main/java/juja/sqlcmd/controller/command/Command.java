@@ -15,7 +15,7 @@ public abstract class Command implements Executable {
         this.view = view;
     }
 
-    public void setCommandType(CommandType commandType) {
+    public void prepareCommand(CommandType commandType) {
         this.commandType = commandType;
         sizeOfSplitCommand = Commands.sizeOfSplitArray(commandType.getCommandPattern());
     }

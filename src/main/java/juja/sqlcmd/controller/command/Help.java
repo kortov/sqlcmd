@@ -10,7 +10,11 @@ public class Help extends Command {
 
     @Override
     protected void executeConnected(String userInput) {
-        view.write("Список команд");
+        view.write("Список команд:");
+        for (CommandType commandType : CommandType.values()) {
+            view.write("\t" + commandType.getCommandPattern() + " - "
+                    + commandType.getDescription());
+        }
     }
 
     @Override

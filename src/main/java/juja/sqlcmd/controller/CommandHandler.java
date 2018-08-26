@@ -43,7 +43,7 @@ public class CommandHandler {
             for (CommandType commandType : CommandType.values()) {
                 CommandSupplier<? extends Command> commandSupplier = commandType.getCommandSupplier();
                 Command command = createCommand(databaseManager, view, commandSupplier);
-                command.setCommandType(commandType);
+                command.prepareCommand(commandType);
                 putCommandIntoMap(commandType, command);
             }
 
